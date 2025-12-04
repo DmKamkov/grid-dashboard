@@ -1,18 +1,15 @@
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
-import type { PDFTemplateData } from '../../types';
 import { PDF_CONFIG } from '../../constants';
 
 /**
  * Generates a PDF from the dashboard element with all graphs visible
  * @param elementId - The ID of the element to capture (default: 'dashboard-content')
- * @param templateData - Optional template data to fill in
  * @param showLoadingIndicator - Whether to show loading indicator (default: true)
  * @returns Promise that resolves when PDF is generated
  */
 export async function generatePDF(
     elementId: string = 'dashboard-content',
-    templateData?: PDFTemplateData,
     showLoadingIndicator: boolean = true
 ): Promise<void> {
     const element = document.getElementById(elementId);
@@ -69,10 +66,21 @@ export async function generatePDF(
             scale: PDF_CONFIG.SCALE,
             useCORS: true,
             logging: false,
-            backgroundColor: null,
+            backgroundColor: '#ffffff',
             allowTaint: false,
             imageTimeout: PDF_CONFIG.TIMEOUT,
             onclone: (clonedDoc) => {
+                // Set white background for PDF generation
+                const appRoot = clonedDoc.querySelector('.app-root');
+                if (appRoot) {
+                    (appRoot as HTMLElement).style.backgroundColor = '#ffffff';
+                }
+                
+                const canvasWrapper = clonedDoc.querySelector('.canvas-wrapper');
+                if (canvasWrapper) {
+                    (canvasWrapper as HTMLElement).style.background = '#ffffff';
+                }
+                
                 // Ensure charts are visible in the cloned document
                 const clonedElement = clonedDoc.getElementById(elementId);
                 if (clonedElement) {
@@ -105,6 +113,12 @@ export async function generatePDF(
                     deleteButtons.forEach((btn) => {
                         (btn as HTMLElement).style.display = 'none';
                     });
+
+                    // Hide chart type selectors in PDF
+                    const chartTypeSelectors = clonedElement.querySelectorAll('.block-type-selector');
+                    chartTypeSelectors.forEach((selector) => {
+                        (selector as HTMLElement).style.display = 'none';
+                    });
                 }
             },
         });
@@ -133,41 +147,7 @@ export async function generatePDF(
         pdf.setFont('helvetica', 'bold');
         pdf.text('DASHBOARD', 105, 20, { align: 'center' });
 
-        // Add template data if provided
-        if (templateData) {
-            let yPos = 35;
-            pdf.setFontSize(12);
-            pdf.setFont('helvetica', 'normal');
-            
-            if (templateData.title) {
-                pdf.setFont('helvetica', 'bold');
-                pdf.text('Title:', 20, yPos);
-                pdf.setFont('helvetica', 'normal');
-                pdf.text(templateData.title, 50, yPos);
-                yPos += 8;
-            }
-            
-            if (templateData.date) {
-                pdf.setFont('helvetica', 'bold');
-                pdf.text('Date:', 20, yPos);
-                pdf.setFont('helvetica', 'normal');
-                pdf.text(templateData.date, 50, yPos);
-                yPos += 8;
-            }
-            
-            if (templateData.notes) {
-                pdf.setFont('helvetica', 'bold');
-                pdf.text('Notes:', 20, yPos);
-                pdf.setFont('helvetica', 'normal');
-                const splitNotes = pdf.splitTextToSize(templateData.notes, 170);
-                pdf.text(splitNotes, 20, yPos + 5);
-                yPos += splitNotes.length * 5 + 5;
-            }
-
-            currentY = yPos + 10;
-        } else {
-            currentY = 30;
-        }
+        currentY = 30;
 
         // Add dashboard image with smart page breaks
         let imageY = currentY;
@@ -237,9 +217,7 @@ export async function generatePDF(
         }
 
         // Save the PDF
-        const fileName = templateData?.title 
-            ? `Dashboard_${templateData.title.replace(/[^a-z0-9]/gi, '_')}.pdf`
-            : `Dashboard_${new Date().toISOString().split('T')[0]}.pdf`;
+        const fileName = `Dashboard_${new Date().toISOString().split('T')[0]}.pdf`;
         pdf.save(fileName);
     } catch (error) {
         console.error('Error generating PDF:', error);

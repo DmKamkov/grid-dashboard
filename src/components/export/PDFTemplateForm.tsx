@@ -94,7 +94,7 @@ export const PDFTemplateForm: React.FC<PDFTemplateFormProps> = ({ isOpen, onClos
             }
             await new Promise(resolve => setTimeout(resolve, 50));
 
-            await generatePDF('dashboard-content', formData, false); // Pass false to skip loading overlay creation
+            await generatePDF('dashboard-content', false); // Pass false to skip loading overlay creation
 
             // Hide again after capture (before theme restore)
             if (dashboardElement && dashboardWasHidden) {

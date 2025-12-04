@@ -1,7 +1,3 @@
-/**
- * Centralized type definitions for the dashboard application
- */
-
 export type BlockType = 'line' | 'bar' | 'text';
 
 export type Theme = 'light' | 'dark';
@@ -17,6 +13,7 @@ export interface GridContextValue {
     addBlock: (type: BlockType) => void;
     deleteBlock: (index: number) => void;
     moveBlock: (fromIndex: number, toIndex: number) => void;
+    changeBlockType: (index: number, newType: BlockType) => void;
 }
 
 export interface ThemeContextValue {

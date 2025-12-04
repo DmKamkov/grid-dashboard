@@ -1,12 +1,8 @@
-/**
- * Application-wide constants and configuration values
- */
-
 // Grid Configuration
 export const GRID_CONFIG = {
     COLUMNS: 3,
-    INITIAL_ROWS: 3,
-    MIN_CELLS: 9, // 3x3 grid
+    INITIAL_ROWS: 1,
+    MIN_CELLS: 3, // 1 row (3 cells)
 } as const;
 
 // Chart Configuration

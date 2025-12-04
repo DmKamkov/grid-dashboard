@@ -23,10 +23,10 @@ export const GridProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         if (current.length <= MIN_CELLS) {
             return current;
         }
-        // Check if all cells beyond the first 3 rows are empty
-        const cellsBeyondThirdRow = current.slice(MIN_CELLS);
-        const hasItemsInFourthRowOrBeyond = cellsBeyondThirdRow.some((cell) => cell !== null);
-        if (!hasItemsInFourthRowOrBeyond) {
+        // Check if all cells beyond the first row are empty
+        const cellsBeyondFirstRow = current.slice(MIN_CELLS);
+        const hasItemsInSecondRowOrBeyond = cellsBeyondFirstRow.some((cell) => cell !== null);
+        if (!hasItemsInSecondRowOrBeyond) {
             return current.slice(0, MIN_CELLS);
         }
         return current;
@@ -99,11 +99,54 @@ export const GridProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         });
     };
 
+    const changeBlockType = (index: number, newType: BlockType) => {
+        setCells((prev) => {
+            if (index < 0 || index >= prev.length) return prev;
+            const block = prev[index];
+            if (!block || block.type === newType) return prev;
+
+            const next = [...prev];
+            
+            // If changing between chart types, preserve or regenerate chart data
+            let chartData: number[] | undefined;
+            if (newType === 'line' || newType === 'bar') {
+                if (block.type === 'line' || block.type === 'bar') {
+                    // If switching between chart types, use existing data if compatible
+                    // Otherwise regenerate based on new type
+                    if (newType === 'line') {
+                        chartData = block.chartData && block.chartData.length >= CHART_CONFIG.LINE_CHART.DATA_POINTS
+                            ? block.chartData.slice(0, CHART_CONFIG.LINE_CHART.DATA_POINTS)
+                            : generateRandomData(CHART_CONFIG.LINE_CHART.DATA_POINTS);
+                    } else if (newType === 'bar') {
+                        chartData = block.chartData && block.chartData.length >= CHART_CONFIG.BAR_CHART.DATA_POINTS
+                            ? block.chartData.slice(0, CHART_CONFIG.BAR_CHART.DATA_POINTS)
+                            : generateRandomData(CHART_CONFIG.BAR_CHART.DATA_POINTS);
+                    }
+                } else {
+                    // Converting from text to chart, generate new data
+                    if (newType === 'line') {
+                        chartData = generateRandomData(CHART_CONFIG.LINE_CHART.DATA_POINTS);
+                    } else if (newType === 'bar') {
+                        chartData = generateRandomData(CHART_CONFIG.BAR_CHART.DATA_POINTS);
+                    }
+                }
+            }
+
+            next[index] = {
+                ...block,
+                type: newType,
+                chartData,
+            };
+            return next;
+        });
+    };
+
     const value: GridContextValue = {
         cells,
         addBlock,
         deleteBlock,
         moveBlock,
+        changeBlockType,
     };
 
     return <GridContext.Provider value={value}>{children}</GridContext.Provider>;
