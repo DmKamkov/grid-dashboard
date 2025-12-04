@@ -1,6 +1,10 @@
-import { createContext, useContext } from 'react';
+/**
+ * Centralized type definitions for the dashboard application
+ */
 
 export type BlockType = 'line' | 'bar' | 'text';
+
+export type Theme = 'light' | 'dark';
 
 export interface Block {
     id: string;
@@ -15,12 +19,16 @@ export interface GridContextValue {
     moveBlock: (fromIndex: number, toIndex: number) => void;
 }
 
-export const GridContext = createContext<GridContextValue | undefined>(undefined);
+export interface ThemeContextValue {
+    theme: Theme;
+    toggleTheme: () => void;
+    setTheme: (theme: Theme) => void;
+}
 
-export const useGrid = (): GridContextValue => {
-    const ctx = useContext(GridContext);
-    if (!ctx) {
-        throw new Error('useGrid must be used within a GridProvider');
-    }
-    return ctx;
-};
+export interface PDFTemplateData {
+    title?: string;
+    author?: string;
+    date?: string;
+    notes?: string;
+    theme?: Theme;
+}

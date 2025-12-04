@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { FileDown, X } from 'lucide-react';
-import { generatePDF, type PDFTemplateData } from '../utils/pdfGenerator';
-import { useTheme } from '../contexts/ThemeContext';
+import { generatePDF } from '../../utils/pdf/pdfGenerator';
+import { useTheme } from '../../hooks';
+import type { PDFTemplateData, Theme } from '../../types';
 import './PDFTemplateForm.css';
 
 interface PDFTemplateFormProps {
@@ -13,7 +14,6 @@ export const PDFTemplateForm: React.FC<PDFTemplateFormProps> = ({ isOpen, onClos
     const { theme: currentTheme, setTheme } = useTheme();
     const [formData, setFormData] = useState<PDFTemplateData>({
         title: '',
-        author: '',
         date: new Date().toLocaleDateString(),
         notes: '',
         theme: currentTheme,
@@ -115,7 +115,6 @@ export const PDFTemplateForm: React.FC<PDFTemplateFormProps> = ({ isOpen, onClos
             // Reset form
             setFormData({
                 title: '',
-                author: '',
                 date: new Date().toLocaleDateString(),
                 notes: '',
                 theme: currentTheme,
@@ -145,7 +144,7 @@ export const PDFTemplateForm: React.FC<PDFTemplateFormProps> = ({ isOpen, onClos
         }
     };
 
-    const handleChange = (field: keyof PDFTemplateData, value: string) => {
+    const handleChange = (field: keyof PDFTemplateData, value: string | Theme) => {
         setFormData((prev) => ({ ...prev, [field]: value }));
     };
 
@@ -178,20 +177,6 @@ export const PDFTemplateForm: React.FC<PDFTemplateFormProps> = ({ isOpen, onClos
                             value={formData.title}
                             onChange={(e) => handleChange('title', e.target.value)}
                             placeholder="Enter dashboard title"
-                        />
-                    </div>
-
-                    <div className="pdf-form-group">
-                        <label htmlFor="pdf-author" className="pdf-form-label">
-                            Author
-                        </label>
-                        <input
-                            id="pdf-author"
-                            type="text"
-                            className="pdf-form-input"
-                            value={formData.author}
-                            onChange={(e) => handleChange('author', e.target.value)}
-                            placeholder="Enter author name"
                         />
                     </div>
 
@@ -232,7 +217,7 @@ export const PDFTemplateForm: React.FC<PDFTemplateFormProps> = ({ isOpen, onClos
                                     name="pdf-theme"
                                     value="light"
                                     checked={formData.theme === 'light'}
-                                    onChange={(e) => handleChange('theme', e.target.value as 'light' | 'dark')}
+                                    onChange={(e) => handleChange('theme', e.target.value as Theme)}
                                 />
                                 <span>Light</span>
                             </label>
@@ -242,7 +227,7 @@ export const PDFTemplateForm: React.FC<PDFTemplateFormProps> = ({ isOpen, onClos
                                     name="pdf-theme"
                                     value="dark"
                                     checked={formData.theme === 'dark'}
-                                    onChange={(e) => handleChange('theme', e.target.value as 'light' | 'dark')}
+                                    onChange={(e) => handleChange('theme', e.target.value as Theme)}
                                 />
                                 <span>Dark</span>
                             </label>
@@ -272,4 +257,3 @@ export const PDFTemplateForm: React.FC<PDFTemplateFormProps> = ({ isOpen, onClos
         </div>
     );
 };
-

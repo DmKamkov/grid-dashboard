@@ -1,6 +1,6 @@
 import React from 'react';
 import { Sun, Moon } from 'lucide-react';
-import { useTheme } from '../contexts/ThemeContext';
+import { useTheme } from '../hooks';
 import '../styles/ThemeSwitcher.css';
 
 export const ThemeSwitcher: React.FC = () => {

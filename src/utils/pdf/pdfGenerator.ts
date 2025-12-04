@@ -1,13 +1,7 @@
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
-
-export interface PDFTemplateData {
-    title?: string;
-    author?: string;
-    date?: string;
-    notes?: string;
-    theme?: 'light' | 'dark';
-}
+import type { PDFTemplateData } from '../../types';
+import { PDF_CONFIG } from '../../constants';
 
 /**
  * Generates a PDF from the dashboard element with all graphs visible
@@ -72,12 +66,12 @@ export async function generatePDF(
 
         // Configure html2canvas to capture charts properly
         const canvas = await html2canvas(element, {
-            scale: 2,
+            scale: PDF_CONFIG.SCALE,
             useCORS: true,
             logging: false,
             backgroundColor: null,
             allowTaint: false,
-            imageTimeout: 15000,
+            imageTimeout: PDF_CONFIG.TIMEOUT,
             onclone: (clonedDoc) => {
                 // Ensure charts are visible in the cloned document
                 const clonedElement = clonedDoc.getElementById(elementId);
@@ -116,9 +110,9 @@ export async function generatePDF(
         });
 
         // Calculate PDF dimensions
-        const imgWidth = 210; // A4 width in mm
-        const pageHeight = 297; // A4 height in mm
-        const canvasScale = 2; // html2canvas scale factor
+        const imgWidth = PDF_CONFIG.PAGE_SIZE.WIDTH;
+        const pageHeight = PDF_CONFIG.PAGE_SIZE.HEIGHT;
+        const canvasScale = PDF_CONFIG.SCALE;
         const scaleX = imgWidth / canvas.width;
         const scaleY = scaleX; // Maintain aspect ratio
         
@@ -157,14 +151,6 @@ export async function generatePDF(
                 pdf.text('Title:', 20, yPos);
                 pdf.setFont('helvetica', 'normal');
                 pdf.text(templateData.title, 50, yPos);
-                yPos += 8;
-            }
-            
-            if (templateData.author) {
-                pdf.setFont('helvetica', 'bold');
-                pdf.text('Author:', 20, yPos);
-                pdf.setFont('helvetica', 'normal');
-                pdf.text(templateData.author, 50, yPos);
                 yPos += 8;
             }
             
@@ -275,4 +261,3 @@ export async function generatePDF(
         }
     }
 }
-

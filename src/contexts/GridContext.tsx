@@ -1,9 +1,9 @@
 import React, { useState, type ReactNode } from 'react';
-import type { Block, BlockType, GridContextValue } from './gridStore';
-import { GridContext } from './gridStore';
+import type { Block, BlockType, GridContextValue } from '../types';
+import { GRID_CONFIG, CHART_CONFIG } from '../constants';
+import { GridContext } from './GridContext.def';
 
-const INITIAL_ROWS = 3;
-const COLUMNS = 3;
+const { COLUMNS, INITIAL_ROWS, MIN_CELLS } = GRID_CONFIG;
 
 function createEmptyGrid(rows: number): (Block | null)[] {
     return Array.from({ length: rows * COLUMNS }, () => null);
@@ -20,15 +20,14 @@ export const GridProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     };
 
     const shrinkToMinimum = (current: (Block | null)[]): (Block | null)[] => {
-        const minCells = INITIAL_ROWS * COLUMNS; // 9 cells (3x3)
-        if (current.length <= minCells) {
+        if (current.length <= MIN_CELLS) {
             return current;
         }
         // Check if all cells beyond the first 3 rows are empty
-        const cellsBeyondThirdRow = current.slice(minCells);
+        const cellsBeyondThirdRow = current.slice(MIN_CELLS);
         const hasItemsInFourthRowOrBeyond = cellsBeyondThirdRow.some((cell) => cell !== null);
         if (!hasItemsInFourthRowOrBeyond) {
-            return current.slice(0, minCells);
+            return current.slice(0, MIN_CELLS);
         }
         return current;
     };
@@ -50,9 +49,9 @@ export const GridProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
             // Generate chart data once when block is created
             let chartData: number[] | undefined;
             if (type === 'line') {
-                chartData = generateRandomData(12); // 12 months
+                chartData = generateRandomData(CHART_CONFIG.LINE_CHART.DATA_POINTS);
             } else if (type === 'bar') {
-                chartData = generateRandomData(4); // 4 quarters
+                chartData = generateRandomData(CHART_CONFIG.BAR_CHART.DATA_POINTS);
             }
             
             next[index] = {
@@ -109,4 +108,3 @@ export const GridProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
     return <GridContext.Provider value={value}>{children}</GridContext.Provider>;
 };
-

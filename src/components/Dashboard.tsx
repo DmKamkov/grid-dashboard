@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { Trash2, FileDown } from 'lucide-react';
-import { useGrid } from '../contexts/gridStore';
-import { BlockView } from './Block';
+import { useGrid } from '../hooks';
+import { BlockView } from './blocks';
 import { ThemeSwitcher } from './ThemeSwitcher';
-import { PDFTemplateForm } from './PDFTemplateForm';
+import { PDFTemplateForm } from './export/PDFTemplateForm';
 
 export const Dashboard: React.FC = () => {
     const { cells, addBlock, deleteBlock, moveBlock } = useGrid();
