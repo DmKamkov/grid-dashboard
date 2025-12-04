@@ -1,0 +1,221 @@
+.app-root {
+    width: calc(100% - 64px);
+    max-width: none;
+    margin: 32px auto;
+    padding: 24px 24px 40px;
+    background-color: var(--color-surface-card);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-card);
+    color: var(--color-text);
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    box-sizing: border-box;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease, color 0.3s ease;
+}
+
+.app-header {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.app-header-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+}
+
+.app-title {
+    margin: 0;
+    font-size: 1.8rem;
+    letter-spacing: 0.03em;
+}
+
+.controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.canvas-wrapper {
+    border-radius: var(--radius-md);
+    background: var(--gradient-canvas);
+    padding: var(--space-lg);
+    border: 1px solid var(--color-border-subtle);
+    transition: background 0.3s ease, border-color 0.3s ease;
+}
+
+.canvas-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+}
+
+@media (max-width: 800px) {
+    .canvas-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+.canvas-cell {
+    position: relative;
+    aspect-ratio: 1;
+    min-height: 200px;
+    border-radius: var(--radius-sm);
+    border: 1px dashed var(--color-border-subtle);
+    background: var(--color-surface-cell);
+    transition:
+        background-color 0.2s ease,
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.cell-empty {
+    background: var(--color-surface-cell-empty);
+}
+
+.cell-filled {
+    border-style: solid;
+    border-color: var(--color-border-cell-filled);
+}
+
+.cell-drop-target {
+    background: var(--color-success-soft);
+    border-color: var(--color-success);
+    box-shadow: 0 0 0 1px var(--color-success-soft);
+}
+
+.block {
+    position: absolute;
+    inset: 6px;
+    border-radius: var(--radius-sm);
+    background: var(--color-surface-block);
+    border: 1px solid var(--color-border-strong);
+    padding: 10px 10px 12px;
+    cursor: grab;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    transition:
+        transform 0.15s ease,
+        box-shadow 0.15s ease,
+        border-color 0.15s ease,
+        background 0.15s ease;
+}
+
+.block:active {
+    cursor: grabbing;
+}
+
+.block:hover {
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-block-hover);
+    border-color: var(--color-accent-soft);
+}
+
+.block-dragging {
+    opacity: 0.65;
+    transform: scale(0.98);
+    box-shadow: var(--shadow-block-dragging);
+}
+
+.block-delete {
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    width: 28px;
+    height: 28px;
+    border-radius: var(--radius-pill);
+    border: none;
+    background: var(--color-surface-card);
+    color: var(--color-text);
+    font-size: 14px;
+    line-height: 1;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition:
+        opacity 0.15s ease,
+        background-color 0.15s ease,
+        transform 0.15s ease,
+        box-shadow 0.15s ease;
+}
+
+.block:hover .block-delete {
+    opacity: 1;
+}
+
+.block-delete:hover {
+    background: var(--color-danger);
+    transform: translateY(-0.5px);
+    box-shadow: var(--shadow-delete);
+}
+
+.block-content {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.block-title {
+    margin: 0;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--color-text);
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+}
+
+.block-body {
+    margin: 0;
+    font-size: 0.85rem;
+    color: var(--color-text-muted);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    overflow-y: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+.block-body::-webkit-scrollbar {
+    display: none;
+}
+
+.block-body p {
+    margin: 0;
+    line-height: 1.5;
+}
+
+.block-text {
+    justify-content: flex-start;
+}
+
+.block-bar-chart {
+    justify-content: flex-start;
+}
+
+.block-line-chart {
+    justify-content: flex-start;
+}
+
+.chart-container {
+    flex: 1;
+    min-height: 0;
+    position: relative;
+    margin-top: 4px;
+}
+
+.block-description {
+    margin: 0;
+    margin-top: 6px;
+    font-size: 0.75rem;
+    color: var(--color-text-subtle);
+    line-height: 1.4;
+}
+

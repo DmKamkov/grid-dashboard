@@ -1,0 +1,42 @@
+## Project-wide guidelines for this React + TypeScript grid dashboard
+
+- **Tech stack**
+  - Use **React + TypeScript** for all UI code.
+  - Prefer **function components** with hooks over class components.
+
+- **State management**
+  - Use **`useState` and React Context only** for app state.
+  - Do **not** introduce additional state libraries (e.g. Redux, Zustand, MobX, Jotai, Recoil).
+  - Keep grid/block state inside the existing `GridContext` (or new context providers), not in ad‑hoc global singletons.
+
+- **Styling**
+  - Use **pure CSS files** (`.css`) imported into components or entry files.
+  - Do **not** use CSS‑in‑JS (styled‑components, emotion, MUI `sx`, etc.) or CSS frameworks (Tailwind, Bootstrap, etc.).
+  - Keep layout and visual rules in `App.css`, `index.css`, or new dedicated CSS files, not inline `style` attributes except for trivial one‑offs.
+
+- **Grid and layout rules**
+  - The main canvas must remain a **3‑column grid** with effectively **unlimited vertical height** (rows can be added as needed).
+  - Each grid cell can hold **at most one block**; do not implement overlapping or multi‑cell blocks unless requirements change.
+  - **All blocks are 1x1** in grid terms.
+
+- **Blocks / widgets**
+  - Supported block types must include: **Line Chart**, **Bar Chart**, and **Text Block**.
+  - It is allowed to use chart libraries (e.g. Chart.js, Recharts) or custom mock visuals for charts.
+  - When adding new block types, follow existing patterns (`BlockType` union, `Block` model, and `BlockView` rendering).
+
+- **Add / delete behavior**
+  - Adding a block must always place it in the **first available empty cell**, scanning **left to right, top to bottom**.
+  - Deleting a block should **free the cell** (set it back to empty) without re‑packing other blocks unless a future requirement says otherwise.
+  - Keep the **hover delete button** in the block’s top‑right corner as the primary delete interaction.
+
+- **Drag & drop**
+  - Blocks can be **dragged and dropped only into empty cells**.
+  - Dropping onto an occupied cell must be **ignored** (no swap) unless requirements explicitly change.
+  - Provide **visual feedback** for the current drop target cell.
+  - You may use either **native HTML5 drag & drop** (current approach) or a **small third‑party DnD library**, but avoid large, heavy drag frameworks unless needed.
+
+- **Project quality**
+  - Keep components **small and focused**; avoid “god components”.
+  - Prefer **typed props and context values** (no `any`).
+  - Maintain good **accessibility** where practical (focus styles, discernible text, etc.).
+
