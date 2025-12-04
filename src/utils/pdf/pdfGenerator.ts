@@ -123,13 +123,6 @@ export async function generatePDF(
             bottom: block.bottom * canvasScale,
             height: block.height * canvasScale,
         }));
-        
-        // Convert to PDF coordinates (mm) for page break calculations
-        const blocksInMM = blocksInCanvas.map(block => ({
-            top: block.top * scaleY,
-            bottom: block.bottom * scaleY,
-            height: block.height * scaleY,
-        }));
 
         // Create PDF
         const pdf = new jsPDF('p', 'mm', 'a4');
