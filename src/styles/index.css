@@ -28,81 +28,83 @@
 /* Dark theme (default) */
 :root[data-theme='dark'] {
     /* colors: base */
-    --color-bg-page: #020617;
-    --color-text: #e5e7eb;
-    --color-text-muted: #cbd5f5;
+    --color-bg-page: #0f1419;
+    --color-text: #ffffff;
+    --color-text-muted: #e5e7eb;
     --color-text-subtle: #94a3b8;
 
     /* colors: surfaces & borders */
-    --color-surface-card: #0f172a;
-    --color-surface-muted: #1d283a;
-    --color-surface-cell: rgba(15, 23, 42, 0.7);
-    --color-surface-cell-empty: rgba(15, 23, 42, 0.6);
-    --color-surface-block: linear-gradient(145deg, #020617, #1f2937);
-    --color-border-subtle: rgba(148, 163, 184, 0.4);
-    --color-border-strong: rgba(148, 163, 184, 0.7);
-    --color-border-cell-filled: rgba(148, 163, 184, 0.6);
+    --color-surface-card: #1a1f2e;
+    --color-surface-muted: #252b3a;
+    --color-surface-cell: rgba(26, 31, 46, 0.8);
+    --color-surface-cell-empty: rgba(26, 31, 46, 0.6);
+    --color-surface-block: linear-gradient(145deg, #1a1f2e, #252b3a);
+    --color-border-subtle: rgba(148, 163, 184, 0.3);
+    --color-border-strong: rgba(148, 163, 184, 0.5);
+    --color-border-cell-filled: rgba(34, 197, 94, 0.3);
 
-    /* colors: accents */
-    --color-accent: #6366f1;
-    --color-accent-soft: rgba(129, 140, 248, 0.9);
-    --color-accent-line: rgba(96, 165, 250, 0.9);
+    /* colors: accents - vibrant green theme */
+    --color-accent: #22c55e;
+    --color-accent-soft: rgba(34, 197, 94, 0.8);
+    --color-accent-line: rgba(34, 197, 94, 0.9);
     --color-success: #22c55e;
-    --color-success-soft: rgba(34, 197, 94, 0.4);
-    --color-danger: #b91c1c;
-    --color-danger-soft: rgba(248, 113, 113, 0.9);
+    --color-success-soft: rgba(34, 197, 94, 0.15);
+    --color-danger: #ef4444;
+    --color-danger-soft: rgba(239, 68, 68, 0.9);
+    --color-delete-icon: #ffffff;
 
-    /* shadows */
-    --shadow-button-hover: 0 8px 18px rgba(15, 23, 42, 0.7);
-    --shadow-button-active: 0 4px 10px rgba(15, 23, 42, 0.8);
-    --shadow-card: 0 18px 45px rgba(15, 23, 42, 0.7), 0 0 0 1px rgba(148, 163, 184, 0.15);
-    --shadow-block-hover: 0 12px 26px rgba(15, 23, 42, 0.8);
-    --shadow-block-dragging: 0 18px 40px rgba(15, 23, 42, 0.9), 0 0 0 1px rgba(129, 140, 248, 0.4);
-    --shadow-delete: 0 0 0 1px rgba(248, 113, 113, 0.9);
+    /* shadows - refined with green accents */
+    --shadow-button-hover: 0 4px 12px rgba(34, 197, 94, 0.2);
+    --shadow-button-active: 0 2px 6px rgba(34, 197, 94, 0.3);
+    --shadow-card: 0 4px 20px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(148, 163, 184, 0.1);
+    --shadow-block-hover: 0 8px 24px rgba(34, 197, 94, 0.15);
+    --shadow-block-dragging: 0 12px 32px rgba(34, 197, 94, 0.2), 0 0 0 1px rgba(34, 197, 94, 0.4);
+    --shadow-delete: 0 0 0 1px rgba(239, 68, 68, 0.9);
 
     /* gradients */
-    --gradient-canvas: radial-gradient(circle at top left, #1d283a, #020617);
-    --gradient-button: radial-gradient(circle at top left, var(--color-surface-muted), var(--color-bg-page));
+    --gradient-canvas: radial-gradient(circle at top left, #252b3a, #0f1419);
+    --gradient-button: linear-gradient(135deg, #1a1f2e 0%, #252b3a 100%);
 }
 
 /* Light theme */
 :root[data-theme='light'] {
-    /* colors: base */
-    --color-bg-page: #f8fafc;
-    --color-text: #1e293b;
-    --color-text-muted: #475569;
-    --color-text-subtle: #64748b;
+    /* colors: base - green financial dashboard style */
+    --color-bg-page: #f0f9f4;
+    --color-text: #1e3a2f;
+    --color-text-muted: #2d5a47;
+    --color-text-subtle: #4a7c65;
 
     /* colors: surfaces & borders */
     --color-surface-card: #ffffff;
-    --color-surface-muted: #f1f5f9;
-    --color-surface-cell: rgba(241, 245, 249, 0.8);
-    --color-surface-cell-empty: rgba(241, 245, 249, 0.6);
-    --color-surface-block: linear-gradient(145deg, #ffffff, #f1f5f9);
-    --color-border-subtle: rgba(148, 163, 184, 0.3);
-    --color-border-strong: rgba(148, 163, 184, 0.5);
-    --color-border-cell-filled: rgba(148, 163, 184, 0.4);
+    --color-surface-muted: #f7fdf9;
+    --color-surface-cell: rgba(255, 255, 255, 0.95);
+    --color-surface-cell-empty: rgba(240, 249, 244, 0.8);
+    --color-surface-block: linear-gradient(145deg, #ffffff, #f7fdf9);
+    --color-border-subtle: rgba(16, 185, 129, 0.2);
+    --color-border-strong: rgba(16, 185, 129, 0.3);
+    --color-border-cell-filled: rgba(16, 185, 129, 0.25);
 
-    /* colors: accents */
-    --color-accent: #6366f1;
-    --color-accent-soft: rgba(99, 102, 241, 0.8);
-    --color-accent-line: rgba(99, 102, 241, 0.8);
-    --color-success: #22c55e;
-    --color-success-soft: rgba(34, 197, 94, 0.3);
-    --color-danger: #dc2626;
-    --color-danger-soft: rgba(220, 38, 38, 0.9);
+    /* colors: accents - green financial theme */
+    --color-accent: #10b981;
+    --color-accent-soft: rgba(16, 185, 129, 0.7);
+    --color-accent-line: rgba(16, 185, 129, 0.8);
+    --color-success: #10b981;
+    --color-success-soft: rgba(16, 185, 129, 0.12);
+    --color-danger: #ef4444;
+    --color-danger-soft: rgba(239, 68, 68, 0.9);
+    --color-delete-icon: #1e3a2f;
 
-    /* shadows */
-    --shadow-button-hover: 0 8px 18px rgba(0, 0, 0, 0.1);
-    --shadow-button-active: 0 4px 10px rgba(0, 0, 0, 0.15);
-    --shadow-card: 0 18px 45px rgba(0, 0, 0, 0.1), 0 0 0 1px rgba(148, 163, 184, 0.2);
-    --shadow-block-hover: 0 12px 26px rgba(0, 0, 0, 0.15);
-    --shadow-block-dragging: 0 18px 40px rgba(0, 0, 0, 0.2), 0 0 0 1px rgba(99, 102, 241, 0.3);
-    --shadow-delete: 0 0 0 1px rgba(220, 38, 38, 0.9);
+    /* shadows - green-tinted, soft */
+    --shadow-button-hover: 0 4px 12px rgba(16, 185, 129, 0.15);
+    --shadow-button-active: 0 2px 6px rgba(16, 185, 129, 0.2);
+    --shadow-card: 0 2px 12px rgba(0, 0, 0, 0.06), 0 0 0 1px rgba(16, 185, 129, 0.1);
+    --shadow-block-hover: 0 6px 20px rgba(16, 185, 129, 0.12);
+    --shadow-block-dragging: 0 10px 28px rgba(16, 185, 129, 0.18), 0 0 0 1px rgba(16, 185, 129, 0.2);
+    --shadow-delete: 0 0 0 1px rgba(239, 68, 68, 0.9);
 
-    /* gradients */
-    --gradient-canvas: radial-gradient(circle at top left, #f1f5f9, #e2e8f0);
-    --gradient-button: radial-gradient(circle at top left, var(--color-surface-muted), var(--color-bg-page));
+    /* gradients - green tones */
+    --gradient-canvas: linear-gradient(135deg, #f0f9f4 0%, #e6f7ed 100%);
+    --gradient-button: linear-gradient(135deg, #ffffff 0%, #f7fdf9 100%);
 }
 
 :root {
@@ -139,6 +141,7 @@ button {
     background: var(--gradient-button);
     color: var(--color-text);
     cursor: pointer;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
     transition:
         border-color 0.2s ease,
         background 0.2s ease,

@@ -31,9 +31,9 @@ interface BlockProps {
     block: Block;
 }
 
-const getChartOptions = (theme: 'light' | 'dark') => {
-    const textColor = theme === 'light' ? '#64748b' : '#94a3b8';
-    const gridColor = theme === 'light' ? 'rgba(148, 163, 184, 0.15)' : 'rgba(148, 163, 184, 0.1)';
+const getChartOptions = (theme: 'light' | 'dark', xAxisTitle?: string) => {
+    const textColor = theme === 'light' ? '#4a7c65' : '#94a3b8';
+    const gridColor = theme === 'light' ? 'rgba(16, 185, 129, 0.1)' : 'rgba(148, 163, 184, 0.1)';
     
     return {
         responsive: true,
@@ -57,6 +57,18 @@ const getChartOptions = (theme: 'light' | 'dark') => {
                         size: 10,
                     },
                 },
+                title: {
+                    display: !!xAxisTitle,
+                    text: xAxisTitle || '',
+                    color: textColor,
+                    font: {
+                        size: 11,
+                        weight: '500',
+                    },
+                    padding: {
+                        top: 8,
+                    },
+                },
             },
             y: {
                 grid: {
@@ -67,63 +79,82 @@ const getChartOptions = (theme: 'light' | 'dark') => {
                     font: {
                         size: 10,
                     },
+                    callback: function(value) {
+                        return value + '%';
+                    },
+                },
+                beginAtZero: true,
+                max: 100,
+                title: {
+                    display: false,
                 },
             },
         },
     };
 };
 
-const getLineChartData = () => ({
-    labels: ['Jan', 'Feb', 'Mar', 'Apr'],
-    datasets: [
-        {
-            label: 'Sales',
-            data: [12, 19, 15, 25],
-            borderColor: 'rgba(96, 165, 250, 0.9)',
-            backgroundColor: 'rgba(96, 165, 250, 0.1)',
-            fill: true,
-            tension: 0.4,
-            pointBackgroundColor: '#22c55e',
-            pointBorderColor: '#22c55e',
-            pointRadius: 4,
-            pointHoverRadius: 6,
-        },
-    ],
-});
+const getLineChartData = (chartData: number[]) => {
+    // Opinion changes on "Unnamed Topic" - Monthly data
+    const borderColor = '#10b981';
+    const backgroundColor = 'rgba(188, 243, 156, 0.2)';
+    
+    return {
+        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+        datasets: [
+            {
+                label: 'Opinion (%)',
+                data: chartData,
+                borderColor,
+                backgroundColor,
+                fill: true,
+                tension: 0.4,
+                pointBackgroundColor: '#BCF39C',
+                pointBorderColor: '#10b981',
+                pointRadius: 4,
+                pointHoverRadius: 6,
+            },
+        ],
+    };
+};
 
-const getBarChartData = () => ({
-    labels: ['Q1', 'Q2', 'Q3', 'Q4'],
-    datasets: [
-        {
-            label: 'Revenue',
-            data: [35, 70, 50, 85],
-            backgroundColor: [
-                'rgba(99, 102, 241, 0.8)',
-                'rgba(34, 197, 94, 0.8)',
-                'rgba(99, 102, 241, 0.8)',
-                'rgba(34, 197, 94, 0.8)',
-            ],
-            borderRadius: 4,
-        },
-    ],
-});
+const getBarChartData = (chartData: number[]) => {
+    // Opinion changes on "Unnamed Topic" by Quarter
+    const colors = [
+        '#BCF39C',
+        '#10b981',
+        '#BCF39C',
+        '#10b981',
+    ];
+    
+    return {
+        labels: ['Q1', 'Q2', 'Q3', 'Q4'],
+        datasets: [
+            {
+                label: 'Opinion (%)',
+                data: chartData,
+                backgroundColor: colors,
+                borderRadius: 4,
+            },
+        ],
+    };
+};
 
 export const BlockView: React.FC<BlockProps> = ({ block }) => {
     const { theme } = useTheme();
-    const chartOptions = getChartOptions(theme);
-    const lineChartData = getLineChartData();
-    const barChartData = getBarChartData();
+    const lineChartOptions = getChartOptions(theme, 'Months'); // Show "Months" for line chart
+    const barChartOptions = getChartOptions(theme, 'Quarters'); // Show "Quarters" for bar chart
+    const lineChartData = block.chartData ? getLineChartData(block.chartData) : getLineChartData([]);
+    const barChartData = block.chartData ? getBarChartData(block.chartData) : getBarChartData([]);
 
     if (block.type === 'text') {
         return (
             <div className="block-content block-text">
-                <h4 className="block-title">Text Block</h4>
+                <h4 className="block-title">Opinion Analysis</h4>
                 <div className="block-body">
-                    <p>This is a sample text block with additional content to demonstrate the text display capabilities.</p>
-                    <p>The dashboard provides a flexible grid layout where you can organize various types of content blocks.</p>
-                    <p>You can drag and drop blocks to rearrange them, or delete blocks using the hover button in the top-right corner.</p>
-                    <p>Each block type serves a different purpose: charts visualize data trends, while text blocks provide context and information.</p>
-                    <p>The responsive design ensures the dashboard works well on different screen sizes, automatically adjusting the column layout.</p>
+                    <p>Public opinion on "Unnamed Topic" has shown significant variation throughout the year, reflecting changing perspectives and evolving attitudes.</p>
+                    <p>The data tracks how people's views have shifted over time, capturing the dynamic nature of public sentiment on this subject.</p>
+                    <p>Opinion percentages range from 0% to 100%, representing the full spectrum of public views and perspectives.</p>
+                    <p>These changes highlight the importance of continuous monitoring and analysis to understand evolving public opinion trends.</p>
                 </div>
             </div>
         );
@@ -132,12 +163,12 @@ export const BlockView: React.FC<BlockProps> = ({ block }) => {
     if (block.type === 'bar') {
         return (
             <div className="block-content block-bar-chart">
-                <h4 className="block-title">Bar Chart</h4>
+                <h4 className="block-title">Opinion Changes - Quarterly</h4>
                 <div className="chart-container">
-                    <Bar data={barChartData} options={chartOptions} />
+                    <Bar data={barChartData} options={barChartOptions} />
                 </div>
                 <p className="block-description">
-                    Quarterly revenue performance showing steady growth throughout the year.
+                    Quarterly opinion changes on "Unnamed Topic" showing public sentiment shifts.
                 </p>
             </div>
         );
@@ -145,12 +176,12 @@ export const BlockView: React.FC<BlockProps> = ({ block }) => {
 
     return (
         <div className="block-content block-line-chart">
-            <h4 className="block-title">Line Chart</h4>
+            <h4 className="block-title">Opinion Changes - Monthly</h4>
             <div className="chart-container">
-                <Line data={lineChartData} options={chartOptions} />
+                <Line data={lineChartData} options={lineChartOptions} />
             </div>
             <p className="block-description">
-                Monthly sales trend indicating positive momentum over the period.
+                Monthly opinion changes on "Unnamed Topic" tracking public perception over time.
             </p>
         </div>
     );

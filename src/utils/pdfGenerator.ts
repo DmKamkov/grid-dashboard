@@ -1,0 +1,278 @@
+import html2canvas from 'html2canvas';
+import jsPDF from 'jspdf';
+
+export interface PDFTemplateData {
+    title?: string;
+    author?: string;
+    date?: string;
+    notes?: string;
+    theme?: 'light' | 'dark';
+}
+
+/**
+ * Generates a PDF from the dashboard element with all graphs visible
+ * @param elementId - The ID of the element to capture (default: 'dashboard-content')
+ * @param templateData - Optional template data to fill in
+ * @param showLoadingIndicator - Whether to show loading indicator (default: true)
+ * @returns Promise that resolves when PDF is generated
+ */
+export async function generatePDF(
+    elementId: string = 'dashboard-content',
+    templateData?: PDFTemplateData,
+    showLoadingIndicator: boolean = true
+): Promise<void> {
+    const element = document.getElementById(elementId);
+    if (!element) {
+        throw new Error(`Element with id "${elementId}" not found`);
+    }
+
+    // Show loading indicator if requested
+    if (showLoadingIndicator) {
+        const loadingIndicator = document.createElement('div');
+        loadingIndicator.id = 'pdf-loading';
+        loadingIndicator.style.cssText = `
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+            color: white;
+            font-size: 18px;
+            font-family: system-ui, sans-serif;
+        `;
+        loadingIndicator.textContent = 'Generating PDF...';
+        document.body.appendChild(loadingIndicator);
+    }
+
+    try {
+        // Wait a bit to ensure all charts are rendered and visible
+        // (Theme switching is handled by the calling component)
+        await new Promise(resolve => setTimeout(resolve, 500));
+
+        // Get block positions BEFORE capturing to prevent splitting blocks across pages
+        const blocks: Array<{ top: number; bottom: number; height: number }> = [];
+        const blockElements = element.querySelectorAll('.block');
+        const elementRect = element.getBoundingClientRect();
+        
+        blockElements.forEach((block) => {
+            const blockRect = block.getBoundingClientRect();
+            const relativeTop = blockRect.top - elementRect.top;
+            const relativeBottom = blockRect.bottom - elementRect.top;
+            blocks.push({
+                top: relativeTop,
+                bottom: relativeBottom,
+                height: relativeBottom - relativeTop,
+            });
+        });
+
+        // Configure html2canvas to capture charts properly
+        const canvas = await html2canvas(element, {
+            scale: 2,
+            useCORS: true,
+            logging: false,
+            backgroundColor: null,
+            allowTaint: false,
+            imageTimeout: 15000,
+            onclone: (clonedDoc) => {
+                // Ensure charts are visible in the cloned document
+                const clonedElement = clonedDoc.getElementById(elementId);
+                if (clonedElement) {
+                    // Force visibility of all chart canvases
+                    const chartCanvases = clonedElement.querySelectorAll('canvas');
+                    chartCanvases.forEach((canvas) => {
+                        (canvas as HTMLCanvasElement).style.display = 'block';
+                    });
+
+                    // Remove borders and make empty cells invisible while keeping grid structure
+                    const cells = clonedElement.querySelectorAll('.canvas-cell');
+                    cells.forEach((cell) => {
+                        const htmlCell = cell as HTMLElement;
+                        
+                        // Remove all borders from all cells
+                        htmlCell.style.border = 'none';
+                        htmlCell.style.boxShadow = 'none';
+                        
+                        // Make empty cells completely invisible (transparent background)
+                        if (cell.classList.contains('cell-empty')) {
+                            htmlCell.style.background = 'transparent';
+                        } else {
+                            // Keep filled cells visible but remove borders
+                            htmlCell.style.background = 'transparent';
+                        }
+                    });
+
+                    // Hide delete buttons in PDF
+                    const deleteButtons = clonedElement.querySelectorAll('.block-delete');
+                    deleteButtons.forEach((btn) => {
+                        (btn as HTMLElement).style.display = 'none';
+                    });
+                }
+            },
+        });
+
+        // Calculate PDF dimensions
+        const imgWidth = 210; // A4 width in mm
+        const pageHeight = 297; // A4 height in mm
+        const canvasScale = 2; // html2canvas scale factor
+        const scaleX = imgWidth / canvas.width;
+        const scaleY = scaleX; // Maintain aspect ratio
+        
+        // Convert block positions from DOM pixels to canvas pixels
+        // html2canvas uses scale: 2, so canvas is 2x the DOM size
+        const blocksInCanvas = blocks.map(block => ({
+            top: block.top * canvasScale,
+            bottom: block.bottom * canvasScale,
+            height: block.height * canvasScale,
+        }));
+        
+        // Convert to PDF coordinates (mm) for page break calculations
+        const blocksInMM = blocksInCanvas.map(block => ({
+            top: block.top * scaleY,
+            bottom: block.bottom * scaleY,
+            height: block.height * scaleY,
+        }));
+
+        // Create PDF
+        const pdf = new jsPDF('p', 'mm', 'a4');
+        let currentY = 0;
+
+        // Add "DASHBOARD" title at the beginning
+        pdf.setFontSize(24);
+        pdf.setFont('helvetica', 'bold');
+        pdf.text('DASHBOARD', 105, 20, { align: 'center' });
+
+        // Add template data if provided
+        if (templateData) {
+            let yPos = 35;
+            pdf.setFontSize(12);
+            pdf.setFont('helvetica', 'normal');
+            
+            if (templateData.title) {
+                pdf.setFont('helvetica', 'bold');
+                pdf.text('Title:', 20, yPos);
+                pdf.setFont('helvetica', 'normal');
+                pdf.text(templateData.title, 50, yPos);
+                yPos += 8;
+            }
+            
+            if (templateData.author) {
+                pdf.setFont('helvetica', 'bold');
+                pdf.text('Author:', 20, yPos);
+                pdf.setFont('helvetica', 'normal');
+                pdf.text(templateData.author, 50, yPos);
+                yPos += 8;
+            }
+            
+            if (templateData.date) {
+                pdf.setFont('helvetica', 'bold');
+                pdf.text('Date:', 20, yPos);
+                pdf.setFont('helvetica', 'normal');
+                pdf.text(templateData.date, 50, yPos);
+                yPos += 8;
+            }
+            
+            if (templateData.notes) {
+                pdf.setFont('helvetica', 'bold');
+                pdf.text('Notes:', 20, yPos);
+                pdf.setFont('helvetica', 'normal');
+                const splitNotes = pdf.splitTextToSize(templateData.notes, 170);
+                pdf.text(splitNotes, 20, yPos + 5);
+                yPos += splitNotes.length * 5 + 5;
+            }
+
+            currentY = yPos + 10;
+        } else {
+            currentY = 30;
+        }
+
+        // Add dashboard image with smart page breaks
+        let imageY = currentY;
+        let sourceY = 0; // Source Y position in canvas (pixels)
+        
+        while (sourceY < canvas.height) {
+            // Calculate how much we can fit on current page (in canvas pixels)
+            const remainingPageSpace = pageHeight - imageY;
+            let maxSourceHeightPixels = remainingPageSpace / scaleY;
+            
+            // Check all blocks to ensure none are split
+            for (const block of blocksInCanvas) {
+                // If block would be split by the current page break
+                const pageBreakY = sourceY + maxSourceHeightPixels;
+                if (block.top < pageBreakY && block.bottom > pageBreakY) {
+                    // Block would be split - adjust page break to before this block
+                    // But only if block hasn't started yet on this page
+                    if (block.top >= sourceY) {
+                        // Block starts on this page - ensure entire block fits
+                        const blockEndInMM = imageY + (block.bottom - sourceY) * scaleY;
+                        if (blockEndInMM > pageHeight) {
+                            // Block doesn't fit - start new page before this block
+                            maxSourceHeightPixels = block.top - sourceY;
+                        }
+                    } else {
+                        // Block started before this page - ensure it ends on this page
+                        const blockEndInMM = imageY + (block.bottom - sourceY) * scaleY;
+                        if (blockEndInMM > pageHeight) {
+                            // Block would be split - limit to end of page
+                            maxSourceHeightPixels = (pageHeight - imageY) / scaleY;
+                        }
+                    }
+                }
+            }
+            
+            // Ensure we don't exceed canvas bounds
+            const heightToAdd = Math.max(0, Math.min(maxSourceHeightPixels, canvas.height - sourceY));
+            
+            if (heightToAdd <= 0) break;
+            
+            const heightInMM = heightToAdd * scaleY;
+            
+            // Create a temporary canvas for this page section
+            const pageCanvas = document.createElement('canvas');
+            pageCanvas.width = canvas.width;
+            pageCanvas.height = Math.ceil(heightToAdd);
+            const ctx = pageCanvas.getContext('2d');
+            
+            if (ctx) {
+                ctx.drawImage(
+                    canvas,
+                    0, sourceY, canvas.width, heightToAdd, // Source
+                    0, 0, canvas.width, heightToAdd // Destination
+                );
+                
+                const pageImgData = pageCanvas.toDataURL('image/png');
+                pdf.addImage(pageImgData, 'PNG', 0, imageY, imgWidth, heightInMM);
+            }
+            
+            sourceY += heightToAdd;
+            
+            // If there's more content, add a new page
+            if (sourceY < canvas.height) {
+                pdf.addPage();
+                imageY = 0;
+            }
+        }
+
+        // Save the PDF
+        const fileName = templateData?.title 
+            ? `Dashboard_${templateData.title.replace(/[^a-z0-9]/gi, '_')}.pdf`
+            : `Dashboard_${new Date().toISOString().split('T')[0]}.pdf`;
+        pdf.save(fileName);
+    } catch (error) {
+        console.error('Error generating PDF:', error);
+        alert('Failed to generate PDF. Please try again.');
+    } finally {
+        // Remove loading indicator only if we created it
+        if (showLoadingIndicator) {
+            const loadingEl = document.getElementById('pdf-loading');
+            if (loadingEl) {
+                loadingEl.remove();
+            }
+        }
+    }
+}
+

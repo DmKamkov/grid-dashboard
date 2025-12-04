@@ -1,13 +1,15 @@
 import React, { useState } from 'react';
-import { Trash2 } from 'lucide-react';
+import { Trash2, FileDown } from 'lucide-react';
 import { useGrid } from '../contexts/gridStore';
 import { BlockView } from './Block';
 import { ThemeSwitcher } from './ThemeSwitcher';
+import { PDFTemplateForm } from './PDFTemplateForm';
 
 export const Dashboard: React.FC = () => {
     const { cells, addBlock, deleteBlock, moveBlock } = useGrid();
     const [dragSourceIndex, setDragSourceIndex] = useState<number | null>(null);
     const [dragTargetIndex, setDragTargetIndex] = useState<number | null>(null);
+    const [isPDFModalOpen, setIsPDFModalOpen] = useState(false);
 
     const handleDragStart = (index: number) => {
         setDragSourceIndex(index);
@@ -39,7 +41,7 @@ export const Dashboard: React.FC = () => {
         <div className="app-root">
         <header className="app-header">
             <div className="app-header-top">
-                <h1 className="app-title">Grid Dashboard</h1>
+                <h1 className="app-title">DASHBOARD</h1>
                 <ThemeSwitcher />
             </div>
             <div className="controls">
@@ -52,10 +54,18 @@ export const Dashboard: React.FC = () => {
                 <button type="button" onClick={() => addBlock('text')}>
                     Add Text Block
                 </button>
+                <button 
+                    type="button" 
+                    onClick={() => setIsPDFModalOpen(true)}
+                    className="pdf-export-btn"
+                >
+                    <FileDown size={16} />
+                    Export PDF
+                </button>
             </div>
         </header>
 
-        <main className="canvas-wrapper">
+        <main className="canvas-wrapper" id="dashboard-content">
             <div className="canvas-grid">
                 {cells.map((cell, index) => {
                     const isDraggingFromHere = dragSourceIndex === index;
@@ -98,6 +108,10 @@ export const Dashboard: React.FC = () => {
                 })}
             </div>
         </main>
+        <PDFTemplateForm 
+            isOpen={isPDFModalOpen} 
+            onClose={() => setIsPDFModalOpen(false)} 
+        />
         </div>
     );
 };

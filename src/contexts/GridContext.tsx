@@ -33,6 +33,11 @@ export const GridProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         return current;
     };
 
+    // Generate random data between 0 and 100
+    const generateRandomData = (count: number): number[] => {
+        return Array.from({ length: count }, () => Math.floor(Math.random() * 101));
+    };
+
     const addBlock = (type: BlockType) => {
         setCells((prev) => {
             const withCapacity = ensureCapacity(prev);
@@ -41,9 +46,19 @@ export const GridProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
             if (index === -1) {
                 return next;
             }
+            
+            // Generate chart data once when block is created
+            let chartData: number[] | undefined;
+            if (type === 'line') {
+                chartData = generateRandomData(12); // 12 months
+            } else if (type === 'bar') {
+                chartData = generateRandomData(4); // 4 quarters
+            }
+            
             next[index] = {
                 id: `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
                 type,
+                chartData,
             };
             return next;
         });

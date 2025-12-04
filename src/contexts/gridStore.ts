@@ -5,6 +5,7 @@ export type BlockType = 'line' | 'bar' | 'text';
 export interface Block {
     id: string;
     type: BlockType;
+    chartData?: number[]; // Store generated chart data for line/bar charts
 }
 
 export interface GridContextValue {

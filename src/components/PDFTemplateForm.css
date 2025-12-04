@@ -1,0 +1,197 @@
+.pdf-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: 20px;
+}
+
+.pdf-modal-content {
+    background: var(--color-surface-card);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-card);
+    max-width: 500px;
+    width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+    border: 1px solid var(--color-border-strong);
+}
+
+.pdf-modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 24px;
+    border-bottom: 1px solid var(--color-border-subtle);
+}
+
+.pdf-modal-title {
+    margin: 0;
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--color-text);
+}
+
+.pdf-modal-close {
+    background: transparent;
+    border: none;
+    color: var(--color-text-muted);
+    cursor: pointer;
+    padding: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--radius-sm);
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.pdf-modal-close:hover {
+    background: var(--color-surface-muted);
+    color: var(--color-text);
+}
+
+.pdf-form {
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.pdf-form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.pdf-form-label {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--color-text);
+}
+
+.pdf-form-input,
+.pdf-form-textarea {
+    padding: 10px 12px;
+    border: 1px solid var(--color-border-strong);
+    border-radius: var(--radius-sm);
+    background: var(--color-surface-muted);
+    color: var(--color-text);
+    font-family: inherit;
+    font-size: 0.9rem;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.pdf-form-input:focus,
+.pdf-form-textarea:focus {
+    outline: none;
+    border-color: var(--color-accent-soft);
+    box-shadow: 0 0 0 3px var(--color-success-soft);
+}
+
+.pdf-form-textarea {
+    resize: vertical;
+    min-height: 80px;
+}
+
+.pdf-theme-selector {
+    display: flex;
+    gap: 16px;
+}
+
+.pdf-theme-option {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    padding: 8px 12px;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--color-border-subtle);
+    background: var(--color-surface-muted);
+    transition: all 0.2s ease;
+    flex: 1;
+    justify-content: center;
+}
+
+.pdf-theme-option:hover {
+    border-color: var(--color-accent-soft);
+    background: var(--color-surface-cell);
+}
+
+.pdf-theme-option input[type="radio"] {
+    margin: 0;
+    cursor: pointer;
+    accent-color: var(--color-accent);
+}
+
+.pdf-theme-option input[type="radio"]:checked + span {
+    font-weight: 600;
+    color: var(--color-accent);
+}
+
+.pdf-theme-option span {
+    color: var(--color-text);
+    font-size: 0.9rem;
+    user-select: none;
+}
+
+.pdf-theme-option:has(input[type="radio"]:checked) {
+    border-color: var(--color-accent-soft);
+    background: var(--color-success-soft);
+}
+
+.pdf-form-actions {
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+    margin-top: 8px;
+}
+
+.pdf-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 20px;
+    border-radius: var(--radius-pill);
+    border: 1px solid var(--color-border-strong);
+    font-size: 0.9rem;
+    font-weight: 500;
+    font-family: inherit;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.pdf-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.pdf-btn-primary {
+    background: var(--gradient-button);
+    color: var(--color-text);
+    border-color: var(--color-accent-soft);
+}
+
+.pdf-btn-primary:hover:not(:disabled) {
+    background: var(--color-accent-soft);
+    border-color: var(--color-accent);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-button-hover);
+}
+
+.pdf-btn-secondary {
+    background: var(--color-surface-muted);
+    color: var(--color-text-muted);
+}
+
+.pdf-btn-secondary:hover:not(:disabled) {
+    background: var(--color-surface-cell);
+    color: var(--color-text);
+    border-color: var(--color-border-strong);
+}
+
