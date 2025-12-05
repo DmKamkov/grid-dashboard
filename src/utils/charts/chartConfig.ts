@@ -1,12 +1,6 @@
-/**
- * Chart.js configuration
- */
 import type { Theme } from '../../types';
 import { THEME_COLORS } from '../../constants';
 
-/**
- * Get chart options for Chart.js charts
- */
 export const getChartOptions = (theme: Theme, xAxisTitle?: string) => {
     const textColor = theme === 'light' ? THEME_COLORS.LIGHT.TEXT : THEME_COLORS.DARK.TEXT;
     const gridColor = theme === 'light' ? THEME_COLORS.LIGHT.GRID : THEME_COLORS.DARK.GRID;

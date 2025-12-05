@@ -62,8 +62,6 @@ export const PDFTemplateForm: React.FC<PDFTemplateFormProps> = ({ isOpen, onClos
         await new Promise(resolve => setTimeout(resolve, 50));
 
         try {
-            // Hide dashboard content before theme change to prevent visible color change
-            // The loading overlay already covers it, but we hide it as extra protection
             if (dashboardElement) {
                 dashboardElement.style.opacity = '0';
                 dashboardElement.style.pointerEvents = 'none';
@@ -74,18 +72,13 @@ export const PDFTemplateForm: React.FC<PDFTemplateFormProps> = ({ isOpen, onClos
                 appRootWasHidden = true;
             }
 
-            // Small delay to ensure hiding is complete
             await new Promise(resolve => setTimeout(resolve, 50));
 
-            // Temporarily switch theme if different from current
             if (formData.theme && formData.theme !== currentTheme) {
                 setTheme(formData.theme);
-                // Wait for theme to apply and components to re-render
                 await new Promise(resolve => setTimeout(resolve, 400));
             }
 
-            // Temporarily restore opacity for html2canvas capture
-            // (html2canvas needs to see the element, but user won't see it due to loading overlay)
             if (dashboardElement && dashboardWasHidden) {
                 dashboardElement.style.opacity = '1';
             }
@@ -94,9 +87,8 @@ export const PDFTemplateForm: React.FC<PDFTemplateFormProps> = ({ isOpen, onClos
             }
             await new Promise(resolve => setTimeout(resolve, 50));
 
-            await generatePDF('dashboard-content', false); // Pass false to skip loading overlay creation
+            await generatePDF('dashboard-content', false);
 
-            // Hide again after capture (before theme restore)
             if (dashboardElement && dashboardWasHidden) {
                 dashboardElement.style.opacity = '0';
             }
@@ -104,15 +96,7 @@ export const PDFTemplateForm: React.FC<PDFTemplateFormProps> = ({ isOpen, onClos
                 (appRootElement as HTMLElement).style.opacity = '0';
             }
 
-            // Restore original theme if it was changed
-            if (formData.theme && formData.theme !== originalTheme) {
-                setTheme(originalTheme);
-                // Wait for theme to restore
-                await new Promise(resolve => setTimeout(resolve, 200));
-            }
-
             onClose();
-            // Reset form
             setFormData({
                 title: '',
                 date: new Date().toLocaleDateString(),
@@ -121,18 +105,15 @@ export const PDFTemplateForm: React.FC<PDFTemplateFormProps> = ({ isOpen, onClos
             });
         } catch (error) {
             console.error('Error generating PDF:', error);
-            // Restore original theme on error
             if (formData.theme && formData.theme !== originalTheme) {
                 setTheme(originalTheme);
             }
         } finally {
-            // Remove loading overlay
             const loadingEl = document.getElementById('pdf-loading');
             if (loadingEl) {
                 loadingEl.remove();
             }
 
-            // Always restore visibility
             if (dashboardElement && dashboardWasHidden) {
                 dashboardElement.style.opacity = '';
                 dashboardElement.style.pointerEvents = '';

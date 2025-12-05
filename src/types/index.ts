@@ -5,7 +5,7 @@ export type Theme = 'light' | 'dark';
 export interface Block {
     id: string;
     type: BlockType;
-    chartData?: number[]; // Store generated chart data for line/bar charts
+    chartData?: number[];
 }
 
 export interface GridContextValue {

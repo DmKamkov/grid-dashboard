@@ -23,7 +23,6 @@ export const GridProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         if (current.length <= MIN_CELLS) {
             return current;
         }
-        // Check if all cells beyond the first row are empty
         const cellsBeyondFirstRow = current.slice(MIN_CELLS);
         const hasItemsInSecondRowOrBeyond = cellsBeyondFirstRow.some((cell) => cell !== null);
         if (!hasItemsInSecondRowOrBeyond) {
@@ -32,7 +31,6 @@ export const GridProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         return current;
     };
 
-    // Generate random data between 0 and 100
     const generateRandomData = (count: number): number[] => {
         return Array.from({ length: count }, () => Math.floor(Math.random() * 101));
     };
@@ -46,7 +44,6 @@ export const GridProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
                 return next;
             }
             
-            // Generate chart data once when block is created
             let chartData: number[] | undefined;
             if (type === 'line') {
                 chartData = generateRandomData(CHART_CONFIG.LINE_CHART.DATA_POINTS);
@@ -107,12 +104,9 @@ export const GridProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
             const next = [...prev];
             
-            // If changing between chart types, preserve or regenerate chart data
             let chartData: number[] | undefined;
             if (newType === 'line' || newType === 'bar') {
                 if (block.type === 'line' || block.type === 'bar') {
-                    // If switching between chart types, use existing data if compatible
-                    // Otherwise regenerate based on new type
                     if (newType === 'line') {
                         chartData = block.chartData && block.chartData.length >= CHART_CONFIG.LINE_CHART.DATA_POINTS
                             ? block.chartData.slice(0, CHART_CONFIG.LINE_CHART.DATA_POINTS)
@@ -123,7 +117,6 @@ export const GridProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
                             : generateRandomData(CHART_CONFIG.BAR_CHART.DATA_POINTS);
                     }
                 } else {
-                    // Converting from text to chart, generate new data
                     if (newType === 'line') {
                         chartData = generateRandomData(CHART_CONFIG.LINE_CHART.DATA_POINTS);
                     } else if (newType === 'bar') {

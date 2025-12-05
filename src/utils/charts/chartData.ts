@@ -1,11 +1,5 @@
-/**
- * Chart data generation utilities
- */
 import { CHART_CONFIG, CHART_COLORS } from '../../constants';
 
-/**
- * Generate line chart data configuration
- */
 export const getLineChartData = (chartData: number[]) => {
     return {
         labels: Array.from(CHART_CONFIG.LINE_CHART.MONTHS),
@@ -26,9 +20,6 @@ export const getLineChartData = (chartData: number[]) => {
     };
 };
 
-/**
- * Generate bar chart data configuration
- */
 export const getBarChartData = (chartData: number[]) => {
     return {
         labels: Array.from(CHART_CONFIG.BAR_CHART.QUARTERS),

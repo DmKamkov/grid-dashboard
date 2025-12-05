@@ -1,19 +1,17 @@
-// Grid Configuration
 export const GRID_CONFIG = {
     COLUMNS: 3,
     INITIAL_ROWS: 1,
-    MIN_CELLS: 3, // 1 row (3 cells)
+    MIN_CELLS: 3,
 } as const;
 
-// Chart Configuration
 export const CHART_CONFIG = {
     LINE_CHART: {
-        DATA_POINTS: 12, // Monthly data
+        DATA_POINTS: 12,
         MONTHS: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
         X_AXIS_TITLE: 'Months',
     },
     BAR_CHART: {
-        DATA_POINTS: 4, // Quarterly data
+        DATA_POINTS: 4,
         QUARTERS: ['Q1', 'Q2', 'Q3', 'Q4'],
         X_AXIS_TITLE: 'Quarters',
     },
@@ -23,7 +21,6 @@ export const CHART_CONFIG = {
     },
 } as const;
 
-// Chart Visual Configuration
 export const CHART_COLORS = {
     LINE: {
         BORDER: '#10b981',
@@ -34,7 +31,6 @@ export const CHART_COLORS = {
     BAR: ['#BCF39C', '#10b981', '#BCF39C', '#10b981'],
 } as const;
 
-// Theme Colors
 export const THEME_COLORS = {
     LIGHT: {
         TEXT: '#4a7c65',
@@ -46,11 +42,10 @@ export const THEME_COLORS = {
     },
 } as const;
 
-// PDF Configuration
 export const PDF_CONFIG = {
     PAGE_SIZE: {
-        WIDTH: 210, // A4 width in mm
-        HEIGHT: 297, // A4 height in mm
+        WIDTH: 210,
+        HEIGHT: 297,
     },
     SCALE: 2,
     TIMEOUT: 15000,

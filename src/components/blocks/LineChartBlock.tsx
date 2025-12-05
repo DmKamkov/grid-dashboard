@@ -19,7 +19,7 @@ export const LineChartBlock: React.FC<LineChartBlockProps> = ({ block, blockInde
 
     const handleTypeChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
         const newType = event.target.value as BlockType;
-        if (newType !== block.type && (newType === 'line' || newType === 'bar')) {
+        if (newType !== block.type) {
             onChangeType(blockIndex, newType);
         }
     };

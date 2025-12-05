@@ -1,6 +1,3 @@
-/**
- * Chart.js initialization - call this once at app startup
- */
 import {
     Chart as ChartJS,
     CategoryScale,
@@ -14,7 +11,6 @@ import {
     Filler,
 } from 'chart.js';
 
-// Register Chart.js components once
 ChartJS.register(
     CategoryScale,
     LinearScale,

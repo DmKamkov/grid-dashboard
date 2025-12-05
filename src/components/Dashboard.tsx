@@ -39,19 +39,17 @@ export const Dashboard: React.FC = () => {
 
     const togglePin = (blockType: BlockType | string) => {
         if (blockType === 'pie' || blockType === 'area' || blockType === 'scatter' || blockType === 'gauge' || blockType === 'text-image') {
-            return; // These are not yet implemented
+            return;
         }
         
         const type = blockType as BlockType;
         setPinnedBlocks(prev => {
             if (prev.includes(type)) {
-                // Unpin - but keep at least one pinned
                 if (prev.length > 1) {
                     return prev.filter(t => t !== type);
                 }
                 return prev;
             } else {
-                // Pin
                 return [...prev, type];
             }
         });
@@ -83,7 +81,6 @@ export const Dashboard: React.FC = () => {
         setDragTargetIndex(null);
     };
 
-    // Warn user before closing tab/browser if there are blocks
     useEffect(() => {
         const hasBlocks = cells.some((cell) => cell !== null);
         
@@ -93,8 +90,6 @@ export const Dashboard: React.FC = () => {
 
         const handleBeforeUnload = (event: BeforeUnloadEvent) => {
             event.preventDefault();
-            // Modern browsers ignore custom messages and show their own
-            event.returnValue = '';
         };
 
         window.addEventListener('beforeunload', handleBeforeUnload);
@@ -196,18 +191,24 @@ export const Dashboard: React.FC = () => {
                             </h4>
                             <div className="blocks-row">
                                 {availableOptions.map((option) => {
-                                    const IconComponent = option.type === 'pie' ? PieChart :
+                                    const IconComponent = option.type === 'line' ? LineChart :
+                                                         option.type === 'bar' ? BarChart3 :
+                                                         option.type === 'text' ? FileText :
+                                                         option.type === 'pie' ? PieChart :
                                                          option.type === 'area' ? AreaChart :
                                                          option.type === 'scatter' ? Target :
                                                          option.type === 'gauge' ? Gauge :
                                                          Image;
+                                    const isFutureBlock = option.type === 'pie' || option.type === 'area' || 
+                                                         option.type === 'scatter' || option.type === 'gauge' || 
+                                                         option.type === 'text-image';
                                     return (
                                         <button
                                             key={option.type}
                                             type="button"
                                             className="block-option-btn block-option-available"
                                             onClick={() => togglePin(option.type)}
-                                            disabled={true}
+                                            disabled={isFutureBlock}
                                         >
                                             <IconComponent size={16} />
                                             {option.label}
